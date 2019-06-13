@@ -1,7 +1,14 @@
+#include <numeric>
+#include <cmath>
+#include <iostream>
+
+#include "SCALE.h"
+
 #include "TH1.h"
 #include "Math/Functor.h"
 #include "Math/BrentMinimizer1D.h"
 
+using namespace std;
 
 double RMS::operator()(double x)
 {

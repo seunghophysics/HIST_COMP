@@ -131,6 +131,7 @@ void hist_compare()
 	TDirectory *PS_OUT = out->mkdir("InVarsPS");
 	TDirectory *NN_OUT = out->mkdir("InVarsNN");
 	TDirectory *XX_OUT = out->mkdir("OtherVars");
+	TDirectory *PS_NN = out->mkdir("PS_NN_COMPARISON");
 
 	// 	Write histograms
 	PS_OUT->cd();
@@ -141,10 +142,27 @@ void hist_compare()
 
 	XX_OUT->cd();
 	write_histograms(other_var, MC_XX, DA_XX, "other");
+	
+	TCanvas *C_PS, *C_NN;
 
 	for(int i = 0; i < 14; i++){
-	
+		TCanvas *C = new TCanvas(in_var[i].c_str());
+
+		C_PS = (TCanvas*)PS_OUT->Get(in_var[i].c_str());
+		C_NN = (TCanvas*)NN_OUT->Get(in_var[i].c_str());
+		
+		C->Divide(2);
+
+		C->cd(1);
+		C_PS->DrawClonePad();
+		
+		C->cd(2);
+		C_NN->DrawClonePad();
 	}
+
+	PS_NN->cd();
+	C->Write();
+
 	out->Close();
 }
 

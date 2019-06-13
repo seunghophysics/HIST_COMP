@@ -12,4 +12,6 @@ class RMS
 		double operator()(double x);
 };
 
+double coefficient(TH1D *h1, TH1D *h2);
+
 #endif
