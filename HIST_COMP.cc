@@ -46,7 +46,7 @@ TCanvas *canvas_pile(string h_name, TH1D *h1, TH1D *h2)
 	legend->AddEntry(h2, "Data", "l");
 	legend->AddEntry(h1, "Normalized MC", "l");
 	
-	legend->Draw();
+	//legend->Draw();
 	c_pile->Update();
 
 	return c_pile;
@@ -95,7 +95,7 @@ void write_histograms(vector<string> var, TDirectory *MC, TDirectory *DA, const 
 				c_pile[4 * i + j]->DrawClonePad();
 		}
 		C->Write();
-		C->SaveAs(Form("pdf/%s_canvas_%d.pdf", option, i + 1));
+		C->SaveAs(Form("pdf/%s/%s_canvas_%d.pdf", option, option, i + 1));
 	} 
 }
 
@@ -143,25 +143,36 @@ void hist_compare()
 	XX_OUT->cd();
 	write_histograms(other_var, MC_XX, DA_XX, "other");
 	
-	TCanvas *C_PS, *C_NN;
+	PS_NN->cd();
+	
+	TCanvas *C_PS_1, *C_NN_1, *C_PS_2, *C_NN_2;
 
-	for(int i = 0; i < 14; i++){
-		TCanvas *C = new TCanvas(in_var[i].c_str());
+	for(int i = 0; i < 7; i++){
+		TCanvas *C = new TCanvas((in_var[2*i] + "_" + in_var[2*i+1]).c_str());
 
-		C_PS = (TCanvas*)PS_OUT->Get(in_var[i].c_str());
-		C_NN = (TCanvas*)NN_OUT->Get(in_var[i].c_str());
+		C_PS_1 = (TCanvas*)PS_OUT->Get(in_var[2*i].c_str());
+		C_NN_1 = (TCanvas*)NN_OUT->Get(in_var[2*i].c_str());
+	
+		C_PS_2 = (TCanvas*)PS_OUT->Get(in_var[2*i+1].c_str());
+		C_NN_2 = (TCanvas*)NN_OUT->Get(in_var[2*i+1].c_str());
 		
-		C->Divide(2);
+		C->Divide(2, 2);
 
 		C->cd(1);
-		C_PS->DrawClonePad();
+		C_PS_1->DrawClonePad();
 		
 		C->cd(2);
-		C_NN->DrawClonePad();
-	}
+		C_PS_2->DrawClonePad();
 
-	PS_NN->cd();
-	C->Write();
+		C->cd(3);
+		C_NN_1->DrawClonePad();
+
+		C->cd(4);
+		C_NN_2->DrawClonePad();
+
+		C->Write();
+		C->SaveAs(Form("pdf/PS_NN/PS_NN_Canvas_%d.pdf", i + 1));
+	}
 
 	out->Close();
 }
